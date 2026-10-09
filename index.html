@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<title>Paywall Audit — Hush</title>
+<link rel="icon" href="img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: only light;
+  /* ---- Hush, extracted from their live onboarding and Pulses paywall ---- */
+  --hu-bg:#F2EFEA; --hu-card:#FFFFFF; --hu-ink:#13161A; --hu-ink2:#5E636A; --hu-muted:#9A9DA2;
+  --hu-cta:#121417; --hu-radio:#F2556B; --hu-ring:#F7A0AC; --hu-badge:#F45B6E;
+  --r-ctl:22px; --r-pill:999px;
+  /* ---- the shell, in Hush's palette ---- */
+  --bg:#F2EFEA; --surf:#FFFFFF; --hair:rgba(19,22,26,.09); --hair2:rgba(19,22,26,.16);
+  --ink:#13161A; --ink2:#4E535A; --ink3:#8C9096;
+  --accent:#F2445F; --accent-lift:#D02F55; --accent-ink:#B5214A;
+  --panel-ink:#13161A; --panel-muted:#61666D; --panel-line:#ECE9E4;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--ink);font-family:Outfit,-apple-system,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input{font:inherit}
+.wide{font-family:Archivo,sans-serif;font-stretch:125%}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:70;background:rgba(242,239,234,.86);backdrop-filter:blur(18px) saturate(160%);border-bottom:1px solid var(--hair)}
+.nav-in{padding:0 28px;height:68px;display:flex;align-items:center;gap:10px}
+.nav-in img{width:28px;height:28px;border-radius:8px}
+.nav-in b{font-size:14px;font-weight:600}
+.nav-in span{font-size:14px;color:var(--ink2)}
+.nav-links{margin-left:auto;display:flex;gap:4px;background:#E6E2DB;border-radius:999px;padding:4px}
+.nav-links button{display:flex;align-items:center;gap:9px;height:44px;padding:0 20px 0 8px;border-radius:999px;font-size:15px;font-weight:600;color:var(--ink2);transition:background .18s,color .18s}
+.nav-links button .n{width:28px;height:28px;border-radius:50%;background:#fff;color:var(--ink3);display:grid;place-items:center;font-size:12.5px;font-weight:700}
+.nav-links button:hover{color:var(--ink)}
+.nav-links button.on{background:var(--ink);color:#fff}
+.nav-links button.on .n{background:rgba(255,255,255,.2);color:#fff}
+@media(max-width:560px){.nav-in{padding:0 14px}.nav-in b,.nav-in span{display:none}.nav-links button{height:40px;padding:0 14px 0 6px;font-size:14px}.nav-links button .n{width:26px;height:26px}}
+
+.view{display:none}.view.on{display:block}
+.wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+@media(max-width:700px){.wrap{padding:0 20px}}
+
+/* ============ overview ============ */
+.hero{padding:100px 0 0;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-340px;left:50%;transform:translateX(-50%);width:1100px;height:640px;border-radius:50%;pointer-events:none;background:radial-gradient(closest-side,rgba(255,92,120,.20),transparent 72%)}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(40% 50% at 8% 22%,rgba(140,235,120,.20),transparent 70%),radial-gradient(38% 45% at 92% 18%,rgba(150,120,255,.22),transparent 70%),radial-gradient(30% 40% at 80% 70%,rgba(110,210,250,.16),transparent 70%)}
+.hero>*{position:relative;z-index:1}
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-lift);margin-bottom:26px}
+.hero h1{font-family:Archivo,sans-serif;font-stretch:125%;font-size:80px;line-height:.98;font-weight:900;letter-spacing:-.03em;margin:0 0 24px}
+.hero .lede{font-size:21px;line-height:1.5;color:var(--ink2);max-width:660px;margin:0 auto;letter-spacing:-.01em}
+.hero .meta{margin-top:28px;font-size:13px;color:var(--ink3)}
+.hero .meta b{color:var(--ink2)}
+.herobtns{display:flex;justify-content:center;gap:10px;margin-top:28px;flex-wrap:wrap}
+.ghostbtn{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--hair2);font-size:14.5px;font-weight:600;padding:9px 20px 9px 9px;border-radius:30px;box-shadow:0 2px 12px rgba(19,22,26,.06)}
+.ghostbtn .pl{width:30px;height:30px;border-radius:50%;background:var(--ink);display:grid;place-items:center;color:#fff}
+.ghostbtn.ac .pl{background:var(--accent)}
+@media(max-width:820px){.hero h1{font-size:52px}.hero{padding-top:64px}.hero .lede{font-size:17px}}
+.stats{display:flex;margin:64px auto 0;max-width:760px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.stat{flex:1;padding:26px 12px;text-align:center;border-left:1px solid var(--hair)}
+.stat:first-child{border-left:0}
+.stat b{display:block;font-family:Archivo,sans-serif;font-stretch:125%;font-size:26px;font-weight:800;letter-spacing:-.02em}
+.stat span{display:block;font-size:12px;color:var(--ink3);margin-top:5px;line-height:1.35}
+@media(max-width:700px){.stat b{font-size:18px}.stat{padding:18px 6px}}
+.fb{max-width:760px;margin:0 auto;padding:30px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:26px;text-align:left}
+@media(max-width:700px){.fb{grid-template-columns:1fr;gap:18px}}
+.fb-k{grid-column:1/-1;font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);text-align:center;margin-bottom:-6px}
+.fb-i{display:flex;gap:12px}
+.fb-i .tick{width:18px;height:18px;flex:none;margin-top:3px;border-radius:50%;background:rgba(242,68,95,.14);display:grid;place-items:center}
+.fb-i .tick svg{width:10px;height:10px;stroke:var(--accent-lift);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.fb-i p{font-size:14.5px;line-height:1.55;color:var(--ink2)}
+.fb-i p b{color:var(--ink)}
+.sec{padding:92px 0}
+.sec-k{font-size:11.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:18px}
+.sec h2{font-size:38px;line-height:1.14;font-weight:700;letter-spacing:-.03em;margin:0 0 20px;max-width:740px}
+.sec p.body{font-size:17px;line-height:1.66;color:var(--ink2);max-width:660px;margin:0 0 18px}
+.sec p.body b{color:var(--ink);font-weight:600}
+@media(max-width:820px){.sec h2{font-size:29px}.sec{padding:60px 0}}
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:36px;max-width:840px}
+@media(max-width:760px){.notes{grid-template-columns:1fr}}
+.note{background:#fff;border:1px solid var(--hair);border-radius:18px;padding:24px 26px;box-shadow:0 2px 10px rgba(19,22,26,.04)}
+.note h4{font-size:16px;font-weight:700;margin-bottom:8px}
+.note p{font-size:14.5px;line-height:1.6;color:var(--ink2)}
+.ideas{margin-top:14px;border-top:1px solid var(--hair)}
+.idea{display:grid;grid-template-columns:52px 1fr 190px;gap:26px;align-items:start;padding:28px 4px;border-bottom:1px solid var(--hair);text-align:left;width:100%;transition:background .15s}
+.idea:hover{background:rgba(255,255,255,.7)}
+@media(max-width:780px){.idea{grid-template-columns:38px 1fr;gap:16px}}
+.idea .no{width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;font:700 13px/28px Outfit,sans-serif;text-align:center}
+.idea h3{font-size:21px;line-height:1.25;font-weight:700;letter-spacing:-.02em;margin-bottom:7px}
+.idea p{font-size:15px;line-height:1.6;color:var(--ink2);max-width:560px}
+.idea .seeit{display:block;margin-top:10px;font-size:13px;font-weight:600;color:var(--accent-lift)}
+.idea .out{text-align:right;padding-top:3px}
+@media(max-width:780px){.idea .out{grid-column:2;text-align:left;padding-top:4px}}
+.idea .out b{display:block;font-size:19px;font-weight:700;color:var(--accent-lift);white-space:nowrap}
+.idea .out span{display:block;font-size:10.5px;color:var(--ink3);margin-top:3px;letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+.band{background:#fff;border:1px solid var(--hair);border-radius:28px;padding:38px 44px;margin-top:44px;display:flex;align-items:center;gap:36px;flex-wrap:wrap;box-shadow:0 2px 10px rgba(19,22,26,.04)}
+@media(max-width:700px){.band{padding:28px 24px}}
+.band .lab{font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.band .txt{flex:1;min-width:240px}
+.band .txt p{font-size:16px;line-height:1.6;color:var(--ink2)}
+.band .nums{display:flex;gap:34px}
+.band .nums b{display:block;font-size:30px;font-weight:700;letter-spacing:-.03em;color:var(--accent-lift)}
+.band .nums span{display:block;font-size:11px;color:var(--ink3);letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+.cta-row{display:flex;justify-content:center;align-items:center;gap:22px;margin-top:52px;flex-wrap:wrap}
+.bigbtn{display:inline-flex;align-items:center;gap:9px;background:var(--ink);color:#fff;font-size:16px;font-weight:600;padding:16px 28px;border-radius:30px}
+.qr{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--hair);border-radius:18px;padding:12px 20px 12px 12px;box-shadow:0 2px 10px rgba(19,22,26,.04)}
+.qr img{width:135px;height:135px;image-rendering:pixelated;display:block}
+.qr b{display:block;font-size:14.5px}
+.qr span{display:block;font-size:13px;color:var(--ink3);line-height:1.45;max-width:170px}
+@media(max-width:1080px){.qr{display:none}}
+.foot{border-top:1px solid var(--hair);padding:36px 0 70px;font-size:12.5px;line-height:1.6;color:var(--ink3)}
+
+/* ============ paywall view ============ */
+.stage{display:grid;grid-template-columns:minmax(470px,1fr) minmax(420px,560px);align-items:start;min-height:calc(100vh - 68px)}
+@media(max-width:1060px){.stage{grid-template-columns:minmax(0,1fr)}.panelcol{position:static!important;max-height:none!important;border-left:0!important;border-top:1px solid var(--hair)}}
+.phonecol{padding:24px 24px 44px;display:flex;flex-direction:column;align-items:center;gap:14px;position:relative}
+.panelcol{border-left:1px solid var(--hair);background:#fff;position:sticky;top:68px;max-height:calc(100vh - 68px);overflow-y:auto}
+.tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.seg{display:inline-flex;background:#fff;border:1px solid #E2DED7;border-radius:20px;padding:3px;gap:2px}
+.seg button{padding:6px 12px;border-radius:16px;font:600 12.5px/1 Outfit,sans-serif;color:var(--ink2)}
+.seg button.on{background:var(--ink);color:#fff}
+.seg.demo button{display:flex;align-items:center;gap:6px}
+.demo-cap{width:412px;max-width:100%;min-height:0;background:var(--ink);color:#fff;border-radius:14px;padding:0 16px;font-size:14px;line-height:1.4;overflow:hidden;max-height:0;transition:max-height .25s,padding .25s}
+.demo-cap.on{max-height:90px;padding:11px 16px 13px}
+.demo-cap .bar{height:3px;background:rgba(255,255,255,.18);border-radius:2px;margin-top:9px;overflow:hidden}
+.demo-cap .bar i{display:block;height:100%;width:0;background:var(--accent)}
+.finger{position:absolute;z-index:200;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:rgba(19,22,26,.28);border:2px solid rgba(255,255,255,.95);box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none;opacity:0;transition:left .38s cubic-bezier(.4,0,.2,1),top .38s cubic-bezier(.4,0,.2,1),transform .12s,opacity .2s}
+.finger.on{opacity:1}.finger.press{transform:scale(.72)}
+
+.phone{position:relative;width:412px;height:866px;flex:none;background:#000;border:11px solid #000;border-radius:46px;box-shadow:0 0 0 1.5px #D9D4CC,0 34px 70px -22px rgba(19,22,26,.35)}
+.phone-in{position:absolute;inset:0;border-radius:36px;overflow:hidden;background:var(--hu-bg);color-scheme:only light}
+.island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#000;border-radius:18px;z-index:60}
+.sbar{position:absolute;top:0;left:0;right:0;height:47px;z-index:55;display:flex;align-items:center;justify-content:space-between;padding:4px 30px 0 44px;font:600 16px/1 -apple-system,'SF Pro Text',sans-serif;color:#13161A;pointer-events:none}
+.sbar .g{display:flex;gap:6px;align-items:center}
+.homebar{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:#111;z-index:56}
+
+/* ---- the Pulses paywall: Hush's system, prefixed scr- ---- */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;color:var(--hu-ink);font-family:Outfit,-apple-system,sans-serif;background:var(--hu-bg)}
+.scr-bgwash{position:absolute;inset:0;pointer-events:none;transition:background .5s}
+.scr-top{flex:none;position:relative;padding:58px 20px 0}
+.scr-x{width:36px;height:36px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.scr-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;position:relative}
+.scr-body::-webkit-scrollbar{display:none}
+.scr-foot{flex:none;padding:10px 20px 30px;position:relative}
+.scr-h{font-family:Archivo,sans-serif;font-stretch:125%;font-weight:900;font-size:29px;line-height:1.08;letter-spacing:-.012em;margin:16px 22px 0}
+.scr-sub{font-size:16px;line-height:1.38;color:var(--hu-ink2);margin:10px 22px 0}
+.scr-art{position:relative;height:196px;margin:2px 0 0}
+.scr-art svg.plane{position:absolute;left:50%;top:6px;transform:translateX(-50%);width:250px;height:190px}
+.pz-art .scr-art svg.plane{top:-6px;width:210px;height:160px;opacity:.8}
+.scr-pre{position:absolute;left:20px;right:20px;bottom:6px;background:rgba(255,255,255,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.9);border-radius:20px;padding:15px 14px 13px;display:grid;grid-template-columns:38px 1fr;gap:4px 12px;align-items:center;box-shadow:0 10px 30px -12px rgba(60,20,40,.25)}
+.scr-pre .tile{grid-row:1/3;width:38px;height:38px;border-radius:10px;background:#F4EFEA;display:grid;place-items:center}
+.scr-pre .k{font-family:Archivo,sans-serif;font-stretch:125%;font-weight:800;font-size:10.5px;letter-spacing:.01em;text-transform:uppercase;color:var(--hu-ink);overflow-wrap:anywhere}
+.scr-pre .m{font-size:14px;line-height:1.3;color:var(--hu-ink);padding-right:44px}
+.scr-pre .send{position:absolute;right:12px;bottom:12px;height:28px;padding:0 10px;border-radius:14px;background:linear-gradient(90deg,#F2556B,#F98B73);color:#fff;font:600 13px/28px Outfit,sans-serif;display:flex;align-items:center;gap:5px}
+.scr-moodtab{position:absolute;left:50%;top:-13px;transform:translateX(-50%);background:var(--hu-bg);border-radius:0 0 10px 10px;padding:1px 12px 4px;font-family:Archivo,sans-serif;font-stretch:125%;font-weight:800;font-size:12.5px;white-space:nowrap}
+.scr-moodtab span{background:linear-gradient(90deg,#8B7CF6,#6C4BEA);-webkit-background-clip:text;background-clip:text;color:transparent}
+.scr-proof{display:flex;width:max-content;max-width:calc(100% - 40px);gap:7px;align-items:center;margin:8px auto 0;padding:5px 13px;border-radius:999px;background:rgba(255,255,255,.72);font-size:13.5px;color:var(--hu-ink2);white-space:nowrap}
+.scr-proof b{color:var(--hu-ink);font-weight:700}
+.scr-proof .lr{width:14px;height:16px}
+.scr-proof .sep{width:3px;height:3px;border-radius:50%;background:#B9B5AF}
+.scr-plans{margin:10px 20px 6px;display:flex;flex-direction:column;gap:11px}
+.scr-plan{position:relative;width:100%;min-height:74px;border-radius:var(--r-ctl);background:var(--hu-card);display:flex;align-items:center;gap:14px;padding:0 16px;text-align:left;border:1.5px solid transparent;color:var(--hu-ink)}
+.scr-plan.on{border-color:var(--hu-ring)}
+.scr-plan .rd{width:26px;height:26px;flex:none;border-radius:50%;border:2.4px solid #3A3D42;display:grid;place-items:center}
+.scr-plan.on .rd{border-color:var(--hu-radio)}
+.scr-plan.on .rd::after{content:'';width:9px;height:5px;border-left:2.4px solid var(--hu-radio);border-bottom:2.4px solid var(--hu-radio);transform:rotate(-45deg) translate(1px,-1px)}
+.scr-plan .tx{flex:1;min-width:0}
+.scr-plan .nm{display:block;font-family:Archivo,sans-serif;font-stretch:125%;font-weight:800;font-size:18.5px;line-height:1.15}
+.scr-plan .pr{display:block;font-size:13.5px;color:var(--hu-ink2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scr-plan .pr .who{display:block;color:var(--hu-ink);font-weight:500}
+.scr-plan .bd{flex:none;background:var(--hu-badge);color:#fff;font-weight:700;font-size:14.5px;padding:3px 13px;border-radius:999px}
+.scr-cta{width:100%;height:54px;border-radius:999px;background:var(--hu-cta);color:#fff;font:400 20px/1 Outfit,sans-serif;letter-spacing:.01em}
+.scr-toast{position:absolute;left:16px;right:16px;bottom:110px;background:rgba(19,22,26,.92);color:#fff;font:500 14px/1.4 Outfit,sans-serif;padding:11px 14px;border-radius:12px;z-index:80;opacity:0;transition:opacity .25s;pointer-events:none;text-align:center}
+.scr-toast.show{opacity:1}
+
+/* today = their shipping version */
+.today .pz{display:none!important}
+.today .scr-h{font-size:31px;margin-top:22px}
+.today .scr-art{height:228px;margin-top:4px}
+.today .scr-art svg.plane{top:10px;width:270px;height:205px;opacity:1}
+.today .scr-plans{margin-top:14px}
+
+/* dark mode — approximated, Hush shows no dark frames */
+.phone-in.dark{--hu-bg:#121417;--hu-card:#1D2126;--hu-ink:#F2EFEA;--hu-ink2:#A9ADB3;--hu-muted:#7C8187;--hu-cta:#F2EFEA}
+.phone-in.dark .scr-cta{color:#121417}
+.phone-in.dark .scr-x{background:#262A30}
+.phone-in.dark .scr-x path{stroke:#F2EFEA}
+.phone-in.dark .scr-plan .rd{border-color:#7C8187}
+.phone-in.dark .scr-pre{background:rgba(29,33,38,.82);border-color:rgba(255,255,255,.08)}
+.phone-in.dark .scr-pre .tile{background:#2A2E34}
+.phone-in.dark .sbar{color:#fff}
+.phone-in.dark .homebar{background:#fff}
+.phone-in.dark .scr-proof .sep{background:#5A5F66}
+.phone-in.dark .scr-proof{background:rgba(29,33,38,.86)}
+.phone-in.dark .scr-bgwash{opacity:.55}
+
+/* markers */
+.mk{position:absolute;z-index:40;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font:700 12px/22px Outfit,sans-serif;text-align:center;box-shadow:0 0 0 3px #fff,0 3px 10px rgba(0,0,0,.25);pointer-events:none;transition:transform .2s}
+.today .mk,.indemo .mk{display:none}
+.hl{outline:2.5px solid var(--accent);outline-offset:3px;border-radius:12px}
+.mk.hot{transform:scale(1.25)}
+.flash{animation:flash 1.8s ease 2}
+@keyframes flash{0%,100%{outline:2.5px solid transparent;outline-offset:3px}50%{outline:2.5px solid var(--accent);outline-offset:3px}}
+
+/* onboarding answers */
+.ans{width:412px;max-width:100%;background:#fff;border:1px solid var(--hair);border-radius:18px;padding:18px 18px 16px;box-shadow:0 2px 10px rgba(19,22,26,.04)}
+.ans .k{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+.ans p{font-size:13px;color:var(--ink3);margin:3px 0 8px;line-height:1.45}
+.ans label{display:block;font-size:12.5px;font-weight:600;color:var(--ink2);margin:10px 0 6px}
+.ans input{width:100%;height:38px;border:1px solid #E2DED7;border-radius:10px;padding:0 12px;font-size:14px;outline:0}
+.ans input:focus{border-color:var(--ink)}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opts button{padding:8px 14px;border-radius:18px;border:1px solid #E2DED7;background:#fff;font:500 13px/1 Outfit,sans-serif;color:var(--ink2)}
+.opts button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.backbar{width:412px;max-width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.backbtn{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 10px;border-radius:999px;background:#fff;border:1px solid var(--hair2);font-size:14px;font-weight:600}
+.backbtn svg{width:16px;height:16px}
+.backbar .where{font-size:12.5px;font-weight:500;color:var(--ink3)}
+.qr.side{width:412px;max-width:100%}
+
+/* panel */
+.pn{padding:32px 34px 60px;color:var(--panel-ink)}
+.pn-eb{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink)}
+.pn h1{font-size:28px;line-height:1.15;font-weight:700;letter-spacing:-.025em;margin:10px 0 12px}
+.pn .lede{font-size:15px;line-height:1.62;color:#3A3F45}
+.pn-from{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 4px}
+.pn-from span{font-size:12.5px;font-weight:500;border-radius:999px;padding:5px 11px;background:#FDECEF;color:var(--accent-ink)}
+.pn-from span b{font-weight:700}
+.chg{border-top:1px solid var(--panel-line);padding:22px 0 20px;display:grid;grid-template-columns:30px 1fr;gap:14px;transition:background .15s}
+.chg:first-of-type{margin-top:22px}
+.chg .no{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font:700 12.5px/26px Outfit,sans-serif;text-align:center;margin-top:1px}
+.chg h3{font-size:17.5px;line-height:1.3;font-weight:700;letter-spacing:-.01em}
+.chg .ba{margin-top:10px;display:grid;grid-template-columns:54px 1fr;gap:6px 10px;font-size:14px;line-height:1.5}
+.chg .ba dt{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--panel-muted);padding-top:3px}
+.chg .ba dd{color:#2E333A}
+.chg .ba dd q{quotes:'“' '”'}
+.chg .uses{margin-top:10px;font-size:12.5px;color:var(--panel-muted)}
+.chg .uses b{color:#2E333A}
+.chg .imp{margin-top:12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.chg .imp b{font-size:26px;font-weight:700;letter-spacing:-.03em;color:var(--accent-ink);white-space:nowrap}
+.chg .imp span{font-size:11.5px;color:var(--panel-muted)}
+.chg .imp .lbl{display:block;width:100%;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--panel-muted)}
+.chg:hover{background:#FFF8F6}
+.kept{border-top:1px solid var(--panel-line);padding-top:20px;margin-top:4px}
+.kept .k{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--panel-muted)}
+.kept p{font-size:14px;line-height:1.6;color:#3A3F45;margin-top:6px}
+.pn-lang{display:none;font-size:12.5px;color:var(--panel-muted);background:#F7F5F2;border-radius:10px;padding:9px 12px;margin-top:14px}
+.pn-lang.on{display:block}
+.pn-foot{font-size:11.5px;line-height:1.55;color:var(--panel-muted);border-top:1px solid var(--panel-line);padding-top:14px;margin-top:22px}
+
+/* on a phone: the prototype is the screen */
+@media(max-width:500px){
+  .phonecol{padding:12px 0 28px}
+  .phone{width:100vw;height:calc(100svh - 68px);min-height:640px;border:0;border-radius:0;box-shadow:none;order:3}
+  .phone-in{border-radius:0}
+  .island,.sbar,.homebar{display:none}
+  .scr-top{padding-top:16px}
+  .backbar{order:1;padding:0 12px;width:100%}.backbar .where{display:none}.demo-cap{width:auto;align-self:stretch;margin:0 10px}
+  .seg button{padding:6px 10px;font-size:12px}.tools{order:2;padding:0 8px}.demo-cap{order:4}
+  .ans{order:5;width:auto;margin:0 12px}
+  .demo-cap.on{position:fixed;left:10px;right:10px;bottom:10px;width:auto;z-index:150}
+}
+</style>
+</head>
+<body>
+<div class="nav"><div class="nav-in"><img src="img/icon.png" alt="Hush"><b>Paywall audit</b><span>· Hush</span><div class="nav-links"><button class="on" data-view="over"><span class="n">1</span>Overview</button><button data-view="pw"><span class="n">2</span>Paywall</button></div></div></div>
+
+<!-- ======================= OVERVIEW ======================= -->
+<div class="view on" id="view-over">
+<div class="hero"><div class="wrap">
+  <div class="eyebrow">Paywall audit · October 2026</div>
+  <h1>Hush</h1>
+  <p class="lede">Five changes to your Pulses paywall, personalized with the answers your onboarding already collects.</p>
+  <div class="meta">Prepared by <b>Adapty</b> · based on your live iOS flow, your website and your App Store listing</div>
+  <div class="herobtns">
+    <button class="ghostbtn" data-view="pw"><span class="pl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>Open the paywall</button>
+    <button class="ghostbtn ac" id="heroDemo"><span class="pl"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M7 4.5v15l12-7.5z"/></svg></span>Watch the 30-second walkthrough</button>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>30,000+</b><span>apps run subscriptions<br>on Adapty</span></div>
+    <div class="stat"><b>5</b><span>changes, all on<br>one screen</span></div>
+    <div class="stat"><b>0</b><span>design changes<br>to your art direction</span></div>
+  </div>
+  <div class="fb">
+    <div class="fb-k">Built in Adapty Flow Builder</div>
+    <div class="fb-i"><span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><p><b>Millions of dollars</b> in subscription revenue pass through Flow Builder every month.</p></div>
+    <div class="fb-i"><span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><p><b>Nearly 500 apps</b> actively build their paywalls and onboarding in it — plenty of them past $100K MRR.</p></div>
+  </div>
+</div></div>
+
+<div class="sec"><div class="wrap">
+  <div class="sec-k">What this is</div>
+  <h2>We signed up to Hush like a new member, then rebuilt the one screen where the money is decided.</h2>
+  <p class="body">Adapty powers subscriptions for <b>30,000+ apps</b>, so we see what moves conversion across the market, not inside one app. We installed Hush, went through the onboarding to the Pulses screen, read your App Store listing and your website, and rebuilt that screen.</p>
+  <p class="body">Your onboarding asks for a name, a mood and who someone wants to talk to. <b>The Pulses screen uses none of it today.</b> The rebuilt one does, and it keeps your design exactly as it is.</p>
+  <div class="notes">
+    <div class="note"><h4>We did not redesign your paywall</h4><p>Your wide black headline, the paper plane, the three white pack cards with the pink radio and badges, your prices and the black Continue button all stay. Only the words and what sits above the packs change.</p></div>
+    <div class="note"><h4>You may have tested some of this</h4><p>We are working from the outside, so we cannot see your experiment history. If you have already run one of these, tell us and we will go deeper on the rest.</p></div>
+  </div>
+</div></div>
+
+<div class="sec" style="padding-top:0"><div class="wrap">
+  <div class="sec-k">What we change on your paywall</div>
+  <h2>Five changes, one screen, ranked by what we would test first.</h2>
+  <p class="body">Each one opens the paywall with that change highlighted.</p>
+  <div class="ideas">
+    <button class="idea" data-hl="1"><span class="no">1</span><span>
+      <h3>Put their name and who they want in the headline</h3>
+      <p>Everyone reads “Increase your chances to get a match.” today. Maya, who wants to talk to men, now reads “Maya, be the like he answers.” Pick Women or Everyone and it says she or they.</p>
+      <span class="seeit">See it on the paywall →</span></span>
+      <span class="out"><b>CR +15–20%</b><span>to purchase</span></span></button>
+    <button class="idea" data-hl="2"><span class="no">2</span><span>
+      <h3>Show a pulse arriving, signed with their name</h3>
+      <p>“Add messages to your likes” is the whole explanation today, next to a paper plane. Their own notification card now shows it: “Maya liked you, with a message”, and the counter on the send button fills to the pack they pick.</p>
+      <span class="seeit">See it on the paywall →</span></span>
+      <span class="out"><b>CR +10–15%</b><span>to purchase</span></span></button>
+    <button class="idea" data-hl="3"><span class="no">3</span><span>
+      <h3>Put your million conversations next to the price</h3>
+      <p>“1M+ conversations started” is a full screen of the onboarding, then gone by the time someone pays. It now sits right above the packs, with your 4.5 from 5.3K French App Store ratings on the French screen.</p>
+      <span class="seeit">See it on the paywall →</span></span>
+      <span class="out"><b>CR +10–15%</b><span>to purchase</span></span></button>
+    <button class="idea" data-hl="4"><span class="no">4</span><span>
+      <h3>Speak in the mood they picked</h3>
+      <p>Hush is built around Friends, Intimate and Deep, but the paywall is the same peach screen for all three. It now wears their mood’s colours and its tab, and the message preview opens in that mood.</p>
+      <span class="seeit">See it on the paywall →</span></span>
+      <span class="out"><b>CR +3–8%</b><span>copy and colour</span></span></button>
+    <button class="idea" data-hl="5"><span class="no">5</span><span>
+      <h3>Say what each pack buys, in people</h3>
+      <p>Packs read “20 Pulses · 1.25€ / Pulse”, which asks a new member to learn a currency. They now read “20 men hear from you first”, so the bigger pack is the bigger reach.</p>
+      <span class="seeit">See it on the paywall →</span></span>
+      <span class="out"><b>CR +3–8%</b><span>ARPU +5–10%</span></span></button>
+  </div>
+  <div class="band">
+    <div class="txt"><div class="lab">Potential outcome</div><p>Together, the five make the Pulses screen talk to the person the onboarding just met, in their mood, about the people they came for.</p></div>
+    <div class="nums"><div><b>up to +20%</b><span>CR to purchase</span></div><div><b>up to +10%</b><span>ARPU</span></div></div>
+  </div>
+  <div class="cta-row">
+    <button class="bigbtn" data-view="pw">Open the paywall <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    <div class="qr"><img src="img/qr.svg" alt="QR code to the paywall"><div><b>Open it on your phone</b><span>Scan to try the paywall in your hand.</span></div></div>
+  </div>
+</div></div>
+<div class="foot"><div class="wrap">Impact ranges are Adapty’s expected effect from teardowns and A/B tests across subscription apps — not measured lift for Hush. Every price, figure, mood and line of copy here comes from Hush’s own in-app screens, website and App Store listing.</div></div>
+</div><!-- /view-over -->
+
+<!-- ======================= PAYWALL ======================= -->
+<div class="view" id="view-pw">
+<div class="stage">
+  <div class="phonecol" id="phonecol">
+    <div class="backbar"><button class="backbtn" data-view="over"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Overview</button><span class="where">Shown right after “Start exploring”</span></div>
+    <div class="tools">
+      <div class="seg" id="segLang"><button data-l="en" class="on">EN</button><button data-l="fr">FR</button></div>
+      <div class="seg" id="segTheme"><button data-th="light" class="on">Light</button><button data-th="dark">Dark</button></div>
+      <div class="seg" id="segVar"><button data-v="today">Today</button><button data-v="new" class="on">Personalized</button></div>
+      <div class="seg demo"><button id="demoBtn"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg>30-sec walkthrough</button></div>
+    </div>
+    <div class="demo-cap" id="demoCap"><span id="demoTxt"></span><div class="bar"><i id="demoBar"></i></div></div>
+
+    <div class="phone">
+      <div class="phone-in" id="phoneIn">
+        <div class="island"></div>
+        <div class="sbar"><span>9:41</span><span class="g">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1" opacity=".35"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2.2c2.3 0 4.4.9 6 2.4l1.3-1.3A10.3 10.3 0 0 0 8 .3 10.3 10.3 0 0 0 .7 3.3L2 4.6a8.4 8.4 0 0 1 6-2.4Zm0 3.7c1.3 0 2.5.5 3.4 1.3l1.3-1.3A6.6 6.6 0 0 0 8 4a6.6 6.6 0 0 0-4.7 1.9l1.3 1.3C5.5 6.4 6.7 5.9 8 5.9Zm0 3.6c.5 0 1 .2 1.3.5L8 11.3 6.7 10c.3-.3.8-.5 1.3-.5Z"/></svg>
+          <svg width="27" height="13" viewBox="0 0 27 13" fill="none"><rect x=".5" y=".5" width="23" height="12" rx="3.5" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="18" height="9" rx="2" fill="currentColor"/><path d="M25 4.5v4c.8-.3 1.3-1.1 1.3-2s-.5-1.7-1.3-2Z" fill="currentColor" opacity=".45"/></svg></span></div>
+        <div class="homebar"></div>
+
+        <section class="scr" id="pw">
+          <div class="scr-bgwash" id="pwWash"></div>
+          <div class="scr-top"><button class="scr-x" id="pwX" aria-label="Close"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 2l10 10M12 2 2 12" stroke="#13161A" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+          <div class="scr-body" id="pwBody">
+            <h1 class="scr-h" id="pwH" data-t="1"></h1>
+            <p class="scr-sub" id="pwSub"></p>
+            <div class="scr-art">
+              <svg class="plane" viewBox="0 0 250 190" fill="none" aria-hidden="true">
+                <path d="M14 120 214 26c14-6 26 4 22 18l-38 132c-4 14-20 16-28 4l-28-40-46 34z" fill="#fff" opacity=".22"/>
+                <path d="M52 116 200 48c10-4 18 4 15 13l-29 96c-3 10-15 12-21 3l-22-31-34 26z" fill="#fff" opacity=".3"/>
+                <path d="M86 108 186 66c7-3 13 3 11 10l-20 66c-2 7-11 8-15 2l-18-26z" fill="#fff" opacity=".95"/>
+                <path d="M144 118 170 84" stroke="#F98B73" stroke-width="5" stroke-linecap="round" opacity=".7"/>
+              </svg>
+              <div class="scr-pre pz" id="pwPre" data-t="2">
+                <div class="scr-moodtab" data-t="4"><span id="pwMood">Deep</span></div>
+                <div class="tile"><svg width="24" height="22" viewBox="0 0 24 22"><defs><linearGradient id="hg" x1="0" x2="1"><stop offset="0" stop-color="#F98B73"/><stop offset="1" stop-color="#F2385F"/></linearGradient></defs><path d="M2 12c3-1 6-4 9-9 1-1.5 3-1 2.6.8L12 9c3-2 6-5 8-7 1.2-1 2.6.2 1.9 1.6-2 4-4 7-6.5 9.4 1.8.3 3.2.4 4.6.2-2.6 2.4-5.6 3.2-8.4 3-1.6 2-3.4 3.6-5.4 4.6 1-2 1.6-3.8 1.8-5.6-2.4.4-4.8 0-6-2.2z" fill="url(#hg)"/></svg></div>
+                <div class="k" id="pwPreK"></div>
+                <div class="m" id="pwPreM"></div>
+                <div class="send"><svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M3 11 21 3l-8 18-2-8z"/></svg><span id="pwCount">20</span></div>
+              </div>
+            </div>
+            <div class="scr-proof pz" id="pwProof" data-t="3"></div>
+            <div class="scr-plans" id="pwPlans"></div>
+          </div>
+          <div class="scr-foot"><button class="scr-cta" id="pwCta">Continue</button></div>
+          <div class="scr-toast" id="toast"></div>
+        </section>
+        <div id="mks"></div>
+      </div>
+    </div>
+
+    <div class="ans" id="ans">
+      <div class="k">Onboarding answers</div>
+      <p>What your onboarding already asks. Change them and the paywall above rewrites itself.</p>
+      <label for="aName">“Tell us more · Name”</label>
+      <input id="aName" value="Maya" autocomplete="off" maxlength="16">
+      <label>“I’d like to talk to”</label>
+      <div class="opts" id="aWho"></div>
+      <label>Their mood</label>
+      <div class="opts" id="aMood"></div>
+    </div>
+    <div class="qr side"><img src="img/qr.svg" alt="QR code to the paywall"><div><b>Open it on your phone</b><span>Scan to try the paywall in your hand.</span></div></div>
+  </div>
+
+  <aside class="panelcol"><div class="pn">
+    <div class="pn-eb">Paywall rebuild · October 2026</div>
+    <h1>Your Pulses paywall, personalized from your own onboarding</h1>
+    <p class="lede">Same screen, same packs, same prices, same art direction. Five changes, each fed by something your onboarding already asks or something you already publish. Flip <b>Today</b> above the phone to see the version that ships now.</p>
+    <div class="pn-from" id="pnFrom"></div>
+    <div class="pn-lang" id="pnLang">French screen translated by us. Prices are as published on your paywall; the 4.5 rating is your French App Store score.</div>
+
+    <div class="chg" data-c="1"><span class="no">1</span><div>
+      <h3>Their name and who they want lead the screen</h3>
+      <dl class="ba"><dt>Today</dt><dd><q>Increase your chances to get a match.</q> The same for everyone.</dd>
+        <dt>Now</dt><dd id="c1now"></dd></dl>
+      <div class="uses"><b>Uses:</b> name, “I’d like to talk to”.</div>
+      <div class="imp"><span class="lbl">Potential outcome · based on Adapty data</span><b>CR +15–20%</b><span>to purchase</span></div></div></div>
+
+    <div class="chg" data-c="2"><span class="no">2</span><div>
+      <h3>A pulse arriving, signed with their name</h3>
+      <dl class="ba"><dt>Today</dt><dd><q>Add messages to your likes with pulses.</q> and a paper plane. A new member has never seen a pulse.</dd>
+        <dt>Now</dt><dd id="c2now"></dd></dl>
+      <div class="uses"><b>Uses:</b> name, mood, the selected pack. The card is your own notification design from “Don’t ever miss a match.”</div>
+      <div class="imp"><span class="lbl">Potential outcome · based on Adapty data</span><b>CR +10–15%</b><span>to purchase</span></div></div></div>
+
+    <div class="chg" data-c="3"><span class="no">3</span><div>
+      <h3>Your proof, next to the price</h3>
+      <dl class="ba"><dt>Today</dt><dd>“1M+ conv started” fills a whole onboarding screen, and nothing on the paywall.</dd>
+        <dt>Now</dt><dd>“1M+ conversations started” above the packs. On the French screen, your 4.5 from 5.3K App Store ratings joins it.</dd></dl>
+      <div class="imp"><span class="lbl">Potential outcome · based on Adapty data</span><b>CR +10–15%</b><span>to purchase</span></div></div></div>
+
+    <div class="chg" data-c="4"><span class="no">4</span><div>
+      <h3>The mood they picked, on the screen</h3>
+      <dl class="ba"><dt>Today</dt><dd>One peach-to-pink screen for Friends, Intimate and Deep alike.</dd>
+        <dt>Now</dt><dd id="c4now"></dd></dl>
+      <div class="uses"><b>Uses:</b> mood. Colours are your own mood gradients; the line under the headline uses your website’s mood copy.</div>
+      <div class="imp"><span class="lbl">Potential outcome · based on Adapty data</span><b>CR +3–8%</b><span>copy and colour</span></div></div></div>
+
+    <div class="chg" data-c="5"><span class="no">5</span><div>
+      <h3>Each pack, said in people</h3>
+      <dl class="ba"><dt>Today</dt><dd><q>20 Pulses · 1.25€ / Pulse</q>. A price per unit of a currency they met a second ago.</dd>
+        <dt>Now</dt><dd id="c5now"></dd></dl>
+      <div class="uses"><b>Uses:</b> “I’d like to talk to”. Pack names, per-pulse prices and badges stay as published.</div>
+      <div class="imp"><span class="lbl">Potential outcome · based on Adapty data</span><b>CR +3–8%</b><span>ARPU +5–10% from a bigger 20-pack share</span></div></div></div>
+
+    <div class="kept"><div class="k">Your design, unchanged</div>
+      <p>The close button, the wide black headline type, the paper plane, the three white pack cards, the pink check radio, the −50% and −33% badges, every price and the black Continue pill.</p></div>
+
+    <div class="pn-foot">Impact ranges are Adapty’s expected effect from teardowns and A/B tests across subscription apps — not measured lift for Hush. Prices, badges, the 1M+ figure, the moods, the 4.5 French App Store rating and the “What do you love most in life?” prompt come from Hush’s own screens, website and App Store listing.</div>
+  </div></aside>
+</div>
+</div><!-- /view-pw -->
+<div class="finger" id="finger"></div>
+
+<script>
+var $=function(s){return document.querySelector(s);}, $$=function(s){return [].slice.call(document.querySelectorAll(s));};
+/* moods: names and descriptors from hush-app.com, colours from Hush's own mood gradients */
+var MOODS={
+ friends:{n:['Friends','Friends'], wash:'linear-gradient(180deg,rgba(242,239,234,0) 14%,rgba(190,240,170,.55) 34%,#9BEA84 62%,#C9EC6A 84%,#F3E25E 100%)', tab:'linear-gradient(90deg,#3CC56A,#8BCB2E)',
+   sub:['Add a friendly hello to your likes. Relaxed, simple, easy to answer.','Ajoute un petit mot à tes likes. Détendu, simple, facile à répondre.'],
+   msg:['What’s the best thing that happened to you this week?','C’est quoi le meilleur moment de ta semaine ?']},
+ intimate:{n:['Intimate','Intimate'], wash:'linear-gradient(180deg,rgba(242,239,234,0) 14%,rgba(250,196,160,.7) 34%,#FF9670 62%,#FF6A78 84%,#FF3D7F 100%)', tab:'linear-gradient(90deg,#F2385F,#F98B73)',
+   sub:['Add a playful line to your likes. Light, low pressure, and they read it first.','Ajoute une phrase joueuse à tes likes. Léger, sans pression, et lu en premier.'],
+   msg:['Honest question: what’s your guilty pleasure?','Question honnête : c’est quoi ton plaisir coupable ?']},
+ deep:{n:['Deep','Deep'], wash:'linear-gradient(180deg,rgba(242,239,234,0) 14%,rgba(160,225,245,.6) 34%,#86C8F8 60%,#8E9BFA 82%,#A36BFF 100%)', tab:'linear-gradient(90deg,#8B7CF6,#6C4BEA)',
+   sub:['Add a real question to your likes. Meaningful talk starts before the match.','Ajoute une vraie question à tes likes. La conversation profonde commence avant le match.'],
+   msg:['What do you love most in life?','Qu’est-ce que tu aimes le plus dans la vie ?']}
+};
+var TODAYWASH='linear-gradient(180deg,rgba(242,239,234,0) 14%,rgba(250,196,160,.7) 34%,#FF9670 62%,#FF6A78 84%,#FF3D7F 100%)';
+var WHO={men:{t:['Men','Hommes'],pr:['he','il'],pl:['men','hommes']}, women:{t:['Women','Femmes'],pr:['she','elle'],pl:['women','femmes']}, everyone:{t:['Everyone','Tout le monde'],pr:['they','on'],pl:['people','personnes']}};
+/* packs exactly as published on Hush's paywall */
+var PACKS=[{k:20,nm:['20 Pulses','20 Pulses'],pp:['1.25€ / Pulse','1,25 € / Pulse'],bd:'-50%'},{k:5,nm:['5 Pulses','5 Pulses'],pp:['1.99€ / Pulse','1,99 € / Pulse'],bd:'-33%'},{k:1,nm:['1 Pulse','1 Pulse'],pp:['2.99€ / Pulse','2,99 € / Pulse'],bd:''}];
+var T={
+ todayH:['Increase your chances to get a match.','Augmente tes chances d’avoir un match.'],
+ todaySub:['Add messages to your likes with pulses.','Ajoute des messages à tes likes avec les pulses.'],
+ cta:['Continue','Continuer'],
+ proof:['<b>1M+</b> conversations started','<b>1M+</b> conversations lancées'],
+ rating:['', '<span class="sep"></span><b>★ 4,5</b> · 5,3 K notes'],
+ liked:['{N} liked you, with a message','{N} t’a liké, avec un message'],
+ pack:['{K} {W} hear from you first','{K} {W} te lisent en premier'],
+ pack1:['1 {W1} hears from you first','1 {W1} te lit en premier'],
+ toastBuy:['App Store purchase sheet opens here','La feuille d’achat App Store s’ouvre ici'],
+ toastX:['Closes the paywall','Ferme le paywall']
+};
+var ONE={men:['man','homme'],women:['woman','femme'],everyone:['person','personne']};
+var S={v:'new',lang:'en',theme:'light',name:'Maya',who:'men',mood:'deep',pack:20};
+function L(){ return S.lang==='fr'?1:0; }
+function first(){ return S.name.trim().split(' ')[0]; }
+function esc(s){ return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+function headline(){
+  if(S.v==='today') return T.todayH[L()];
+  var w=WHO[S.who], nm=esc(first()), i=L();
+  if(i===0) return (nm?nm+', be':'Be')+' the like '+w.pr[0]+' answer'+(S.who==='everyone'?'':'s')+'.';
+  var aux=S.who==='everyone'?'qu’on n’ignore pas':'auquel '+w.pr[1]+' répond';
+  return (nm?nm+', sois':'Sois')+' le like '+aux+'.';
+}
+function packLine(p){
+  var w=WHO[S.who], i=L();
+  if(p.k===1) return T.pack1[i].replace('{W1}',ONE[S.who][i]);
+  return T.pack[i].replace('{K}',p.k).replace('{W}',w.pl[i]);
+}
+function render(){
+  var pz=S.v==='new', i=L(), m=MOODS[S.mood];
+  var pin=$('#phoneIn');
+  pin.classList.toggle('today',!pz); pin.classList.toggle('dark',S.theme==='dark');
+  $('#pw').classList.toggle('pz-art',pz);
+  var wash=pz?m.wash:TODAYWASH; if(S.theme==='dark') wash=wash.replace('rgba(242,239,234,0)','rgba(18,20,23,0)');
+  $('#pwWash').style.background=wash;
+  $('#pwH').innerHTML=headline();
+  $('#pwSub').textContent=pz?m.sub[i]:T.todaySub[i];
+  $('#pwMood').textContent=m.n[i]; $('#pwMood').style.backgroundImage=m.tab;
+  $('#pwPreK').textContent=T.liked[i].replace('{N}',first()||'Someone');
+  $('#pwPreM').textContent=m.msg[i];
+  $('#pwCount').textContent=S.pack;
+  $('#pwProof').innerHTML=T.proof[i]+T.rating[i];
+  $('#pwPlans').innerHTML=PACKS.map(function(p){
+    var sub=pz?'<span class="who">'+packLine(p)+'</span>'+p.pp[i]:p.pp[i];
+    return '<button class="scr-plan'+(p.k===S.pack?' on':'')+'" data-pack="'+p.k+'"'+(p.k===20?' data-t="5"':'')+'><span class="rd"></span><span class="tx"><span class="nm">'+p.nm[i]+'</span><span class="pr">'+sub+'</span></span>'+(p.bd?'<span class="bd">'+p.bd+'</span>':'')+'</button>';
+  }).join('');
+  $$('#pwPlans .scr-plan').forEach(function(b){ b.addEventListener('click',function(){ S.pack=+b.dataset.pack; render(); }); });
+  $('#pwCta').textContent=T.cta[i];
+  $$('#aWho button').forEach(function(b){ b.classList.toggle('on',b.dataset.k===S.who); });
+  $$('#aMood button').forEach(function(b){ b.classList.toggle('on',b.dataset.k===S.mood); });
+  /* panel echoes */
+  var hEn=(function(){ var l=S.lang,v=S.v; S.lang='en'; S.v='new'; var h=headline(); S.lang=l; S.v=v; return h; })();
+  $('#c1now').innerHTML='<q>'+hEn+'</q>';
+  $('#c2now').innerHTML='Their own notification card: <q>'+esc(first()||'Someone')+' liked you, with a message</q> and <q>'+m.msg[0]+'</q>. The send counter shows <b>'+S.pack+'</b>, the pack they have selected.';
+  $('#c4now').innerHTML='The <b>'+m.n[0]+'</b> tab and gradient, and <q>'+m.sub[0]+'</q> under the headline.';
+  $('#c5now').innerHTML='<q>20 Pulses · '+(function(){var l=S.lang;S.lang='en';var s=packLine(PACKS[0]);S.lang=l;return s;})()+' · 1.25€ / Pulse</q>';
+  $('#pnFrom').innerHTML=['Name <b>'+esc(first()||'—')+'</b>','Talk to <b>'+WHO[S.who].t[0]+'</b>','Mood <b>'+m.n[0]+'</b>','Pack <b>'+S.pack+'</b>'].map(function(x){ return '<span>'+x+'</span>'; }).join('');
+  $('#pnLang').classList.toggle('on',S.lang!=='en');
+  requestAnimationFrame(placeMarks);
+}
+$('#aWho').innerHTML=Object.keys(WHO).map(function(k){ return '<button data-k="'+k+'">'+WHO[k].t[0]+'</button>'; }).join('');
+$('#aMood').innerHTML=Object.keys(MOODS).map(function(k){ return '<button data-k="'+k+'">'+MOODS[k].n[0]+'</button>'; }).join('');
+
+function placeMarks(){
+  var pin=$('#phoneIn'), box=pin.getBoundingClientRect(), z=box.width/pin.offsetWidth||1, h='';
+  if(!pin.offsetParent){ $('#mks').innerHTML=''; return; }
+  [1,2,3,4,5].forEach(function(n){
+    var el=document.querySelector('#pw [data-t="'+n+'"]'); if(!el||!el.offsetParent) return;
+    var r=el.getBoundingClientRect(), x=(r.left-box.left)/z-11, y=(r.top-box.top)/z-11;
+    if(n===3){ var rg=document.createRange(); rg.selectNodeContents(el); var tr=rg.getBoundingClientRect(); x=(tr.left-box.left)/z-30; y=(tr.top-box.top)/z+(tr.height-22)/2; }
+    if(n===4){ x=(r.right-box.left)/z+4; y=(r.top-box.top)/z; }
+    if(n===5){ x=(r.right-box.left)/z-14; y=(r.top-box.top)/z-11; }
+    h+='<span class="mk" data-mk="'+n+'" style="left:'+Math.max(4,x)+'px;top:'+y+'px">'+n+'</span>';
+  });
+  $('#mks').innerHTML=h;
+}
+$('#pwBody').addEventListener('scroll',placeMarks);
+window.addEventListener('resize',placeMarks);
+
+function seg(id,attr,fn){ $$('#'+id+' button').forEach(function(b){ b.addEventListener('click',function(e){ if(e.isTrusted) stopDemo(); fn(b.dataset[attr]); $$('#'+id+' button').forEach(function(x){ x.classList.toggle('on',x===b); }); render(); }); }); }
+seg('segVar','v',function(v){ S.v=v; });
+seg('segTheme','th',function(v){ S.theme=v; });
+seg('segLang','l',function(v){ S.lang=v; });
+$('#aName').addEventListener('input',function(e){ S.name=e.target.value; render(); });
+$$('#aWho button').forEach(function(b){ b.addEventListener('click',function(e){ if(e.isTrusted) stopDemo(); S.who=b.dataset.k; render(); }); });
+$$('#aMood button').forEach(function(b){ b.addEventListener('click',function(e){ if(e.isTrusted) stopDemo(); S.mood=b.dataset.k; render(); }); });
+var tt; function toast(m){ var e=$('#toast'); e.textContent=m; e.classList.add('show'); clearTimeout(tt); tt=setTimeout(function(){ e.classList.remove('show'); },1600); }
+$('#pwCta').addEventListener('click',function(){ toast(T.toastBuy[L()]); });
+$('#pwX').addEventListener('click',function(){ toast(T.toastX[L()]); });
+
+$$('.chg').forEach(function(c){
+  var n=c.dataset.c;
+  c.addEventListener('mouseenter',function(){ if(S.v!=='new') return; $$('#pw [data-t="'+n+'"]').forEach(function(e){ e.classList.add('hl'); }); var m=document.querySelector('[data-mk="'+n+'"]'); if(m) m.classList.add('hot'); });
+  c.addEventListener('mouseleave',function(){ $$('.hl').forEach(function(e){ e.classList.remove('hl'); }); $$('.mk.hot').forEach(function(e){ e.classList.remove('hot'); }); });
+});
+
+/* ---- views ---- */
+function showView(v){ if(v!=='pw') stopDemo(); $$('.view').forEach(function(x){ x.classList.remove('on'); }); $('#view-'+v).classList.add('on');
+  $$('.nav-links button').forEach(function(b){ b.classList.toggle('on',b.dataset.view===v); }); window.scrollTo(0,0); requestAnimationFrame(placeMarks); }
+$$('[data-view]').forEach(function(b){ b.addEventListener('click',function(){ showView(b.dataset.view); }); });
+$$('.idea[data-hl]').forEach(function(b){ b.addEventListener('click',function(){
+  var n=b.dataset.hl; showView('pw'); if(S.v!=='new') $('#segVar [data-v=new]').click();
+  setTimeout(function(){ $$('#pw [data-t="'+n+'"]').forEach(function(e){ e.classList.remove('flash'); void e.offsetWidth; e.classList.add('flash'); });
+    var c=document.querySelector('.chg[data-c="'+n+'"]'); if(c){ c.scrollIntoView({block:'nearest'}); c.style.background='#FDECEF'; setTimeout(function(){ c.style.background=''; },3600); } },250); }); });
+
+/* ---- the 30-second walkthrough ---- */
+var demo={on:false,tok:0,t0:0,dur:24500,raf:0};
+function wait(ms,tok){ return new Promise(function(res,rej){ setTimeout(function(){ tok===demo.tok?res():rej('stop'); },ms); }); }
+function cap(txt){ $('#demoTxt').textContent=txt; }
+function fingerTo(el){ var r=el.getBoundingClientRect(), f=$('#finger'); f.style.left=(r.left+r.width/2+window.scrollX)+'px'; f.style.top=(r.top+r.height/2+window.scrollY)+'px'; f.classList.add('on'); }
+async function tap(sel,tok){ var el=typeof sel==='string'?$(sel):sel; if(!el) return; el.scrollIntoView({block:'nearest',behavior:'smooth'}); await wait(120,tok); fingerTo(el); await wait(380,tok); $('#finger').classList.add('press'); await wait(120,tok); $('#finger').classList.remove('press'); el.click(); await wait(160,tok); }
+async function typeName(v,tok){ var inp=$('#aName'); fingerTo(inp); await wait(380,tok); S.name=''; inp.value=''; render(); for(var c of v){ S.name+=c; inp.value=S.name; render(); await wait(90,tok); } }
+function bar(){ if(!demo.on) return; var p=Math.min(1,(performance.now()-demo.t0)/demo.dur); $('#demoBar').style.width=(p*100)+'%'; demo.raf=requestAnimationFrame(bar); }
+async function startDemo(){
+  stopDemo(); var tok=++demo.tok; demo.on=true; demo.t0=performance.now();
+  showView('pw'); $('#phoneIn').classList.add('indemo');
+  S.v='today'; S.name='Maya'; S.who='men'; S.mood='deep'; S.pack=20; $('#aName').value='Maya';
+  $$('#segVar button').forEach(function(x){ x.classList.toggle('on',x.dataset.v==='today'); }); render();
+  $('#demoCap').classList.add('on'); bar();
+  try{
+    cap('Today: one Pulses screen for everyone, right after “Start exploring”.'); await wait(2300,tok);
+    cap('Personalized: same design, now fed by Maya’s onboarding answers.'); await tap('#segVar [data-v=new]',tok); await wait(2100,tok);
+    cap('Her mood sets the colours, the tab and the opening line.'); await tap('#aMood [data-k=intimate]',tok); await wait(1200,tok); await tap('#aMood [data-k=friends]',tok); await wait(1200,tok); await tap('#aMood [data-k=deep]',tok); await wait(900,tok);
+    cap('Who she wants to talk to rewrites the headline and every pack.'); await tap('#aWho [data-k=women]',tok); await wait(1300,tok); await tap('#aWho [data-k=everyone]',tok); await wait(1300,tok); await tap('#aWho [data-k=men]',tok); await wait(700,tok);
+    cap('Her name signs the pulse preview.'); await typeName('Camille',tok); await wait(1100,tok);
+    cap('The send counter follows the pack she picks.'); await tap('#pwPlans [data-pack="5"]',tok); await wait(1300,tok); await tap('#pwPlans [data-pack="20"]',tok); await wait(1100,tok);
+    cap('One tap to buy. Prices and packs exactly as you publish them.'); await tap('#pwCta',tok); await wait(1900,tok);
+  }catch(e){ return; }
+  stopDemo();
+}
+function stopDemo(){ if(!demo.on) return; demo.on=false; demo.tok++; cancelAnimationFrame(demo.raf); $('#demoCap').classList.remove('on'); $('#finger').classList.remove('on'); $('#phoneIn').classList.remove('indemo'); requestAnimationFrame(placeMarks); }
+$('#demoBtn').addEventListener('click',startDemo);
+$('#heroDemo').addEventListener('click',startDemo);
+$('#phoneIn').addEventListener('pointerdown',function(e){ if(e.isTrusted) stopDemo(); });
+$('#aName').addEventListener('pointerdown',function(e){ if(e.isTrusted) stopDemo(); });
+$$('.nav-links button').forEach(function(b){ b.addEventListener('click',stopDemo); });
+
+render();
+window.addEventListener('load',placeMarks);
+if(document.fonts) document.fonts.ready.then(placeMarks);
+if(/[?&]open=(proto|pw)/.test(location.search)) showView('pw');
+</script>
+</body>
+</html>
